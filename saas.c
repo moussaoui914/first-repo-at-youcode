@@ -48,7 +48,7 @@ void determinerTypeAlimentation(const char* espece, char* typeAlim) {
         strcpy(typeAlim, "Omnivore");
     }
 }
-// Version modifiée de verifierAgeCritique
+
 int verifierAgeCritique(Animal a) {
     int ageCritique = 0;
     
@@ -67,9 +67,9 @@ int verifierAgeCritique(Animal a) {
     if (a.age > ageCritique) {
         printf("ALERTE: %s (%s) a depasse l'age critique de %d ans!\n", 
                a.nom, a.espece, ageCritique);
-        return 1; // Retourne 1 si alerte
+        return 1;
     }
-    return 0; // Retourne 0 si pas d'alerte
+    return 0;
 }
 
 void initialiserAnimaux() {
@@ -106,23 +106,28 @@ void initialiserAnimaux() {
 }
 
 void sauvegarderDonnees() {
-    FILE *fichier = fopen("zoo_data.txt", "w");
+    FILE *fichier = fopen("C:\\Users\\HP\\Desktop\\zoo_data.txt", "w");
     if (fichier == NULL) {
         printf("Erreur lors de la creation du fichier de sauvegarde.\n");
         return;
     }
     
+    int animauxSauvegardes = 0;
     for (int i = 0; i < nbAnimaux; i++) {
         if (zoo[i].estOccupe) {
             fprintf(fichier, "%d;%s;%s;%d;%s;%.2f;%s;%s\n",
                    zoo[i].id, zoo[i].nom, zoo[i].espece, zoo[i].age,
                    zoo[i].habitat, zoo[i].poids, zoo[i].typeAlimentation,
                    zoo[i].dateArrivee);
+            animauxSauvegardes++;
         }
     }
     
+    fflush(fichier);
     fclose(fichier);
-    printf("Donnees sauvegardees dans zoo_data.txt!\n");
+    
+    printf("SUCCES: %d animaux sauvegardes sur le Bureau!\n", animauxSauvegardes);
+    printf("Ouvrez le fichier zoo_data.txt avec le Bloc Notes pour voir les donnees.\n");
 }
 
 void ajouterAnimal() {
@@ -193,16 +198,19 @@ void afficherTousAnimaux() {
     }
 }
 
-int comparerNom(const void *a, const void *b) {
-    Animal *a1 = (Animal *)a;
-    Animal *a2 = (Animal *)b;
-    return strcmp(a1->nom, a2->nom);
-}
-
-int comparerAge(const void *a, const void *b) {
-    Animal *a1 = (Animal *)a;
-    Animal *a2 = (Animal *)b;
-    return a1->age - a2->age;
+void trierParNomBulle(Animal arr[], int n) {
+    int i, j;
+    Animal temp;
+    
+    for (i = 0; i < n-1; i++) {
+        for (j = 0; j < n-i-1; j++) {
+            if (strcmp(arr[j].nom, arr[j+1].nom) > 0) {
+                temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+        }
+    }
 }
 
 void afficherTriesParNom() {
@@ -210,13 +218,32 @@ void afficherTriesParNom() {
     int count = 0;
     
     for (int i = 0; i < nbAnimaux; i++) {   
-        if (zoo[i].estOccupe) copie[count++] = zoo[i];
+        if (zoo[i].estOccupe) {
+            copie[count] = zoo[i];
+            count++;
+        }
     }
     
-    qsort(copie, count, sizeof(Animal), comparerNom);
-    printf("\n=== ANIMAUX TRIES PAR NOM ===\n");
+    trierParNomBulle(copie, count);
+    
+    printf("\n=== ANIMAUX TRIES PAR NOM (TRI A BULLES) ===\n");
     for (int i = 0; i < count; i++) {
         afficherAnimal(copie[i]);
+    }
+}
+
+void trierParAgeBulle(Animal arr[], int n) {
+    int i, j;
+    Animal temp;
+    
+    for (i = 0; i < n-1; i++) {
+        for (j = 0; j < n-i-1; j++) {
+            if (arr[j].age > arr[j+1].age) {
+                temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+        }
     }
 }
 
@@ -225,11 +252,83 @@ void afficherTriesParAge() {
     int count = 0;
     
     for (int i = 0; i < nbAnimaux; i++) {
-        if (zoo[i].estOccupe) copie[count++] = zoo[i];
+        if (zoo[i].estOccupe) {
+            copie[count] = zoo[i];
+            count++;
+        }
     }
     
-    qsort(copie, count, sizeof(Animal), comparerAge);
-    printf("\n=== ANIMAUX TRIES PAR AGE ===\n");
+    trierParAgeBulle(copie, count);
+    
+    printf("\n=== ANIMAUX TRIES PAR AGE (TRI A BULLES) ===\n");
+    for (int i = 0; i < count; i++) {
+        afficherAnimal(copie[i]);
+    }
+}
+
+void trierParEspeceBulle(Animal arr[], int n) {
+    int i, j;
+    Animal temp;
+    
+    for (i = 0; i < n-1; i++) {
+        for (j = 0; j < n-i-1; j++) {
+            if (strcmp(arr[j].espece, arr[j+1].espece) > 0) {
+                temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+        }
+    }
+}
+
+void afficherTriesParEspece() {
+    Animal copie[MAX_ANIMAUX];
+    int count = 0;
+    
+    for (int i = 0; i < nbAnimaux; i++) {
+        if (zoo[i].estOccupe) {
+            copie[count] = zoo[i];
+            count++;
+        }
+    }
+    
+    trierParEspeceBulle(copie, count);
+    
+    printf("\n=== ANIMAUX TRIES PAR ESPECE (TRI A BULLES) ===\n");
+    for (int i = 0; i < count; i++) {
+        afficherAnimal(copie[i]);
+    }
+}
+
+void trierParHabitatBulle(Animal arr[], int n) {
+    int i, j;
+    Animal temp;
+    
+    for (i = 0; i < n-1; i++) {
+        for (j = 0; j < n-i-1; j++) {
+            if (strcmp(arr[j].habitat, arr[j+1].habitat) > 0) {
+                temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+        }
+    }
+}
+
+void afficherTriesParHabitat() {
+    Animal copie[MAX_ANIMAUX];
+    int count = 0;
+    
+    for (int i = 0; i < nbAnimaux; i++) {
+        if (zoo[i].estOccupe) {
+            copie[count] = zoo[i];
+            count++;
+        }
+    }
+    
+    trierParHabitatBulle(copie, count);
+    
+    printf("\n=== ANIMAUX TRIES PAR HABITAT (TRI A BULLES) ===\n");
     for (int i = 0; i < count; i++) {
         afficherAnimal(copie[i]);
     }
@@ -404,17 +503,17 @@ void afficherStatistiques() {
     char especes[MAX_ANIMAUX][TAILLE_ESPECE];
     int compteurEspeces[MAX_ANIMAUX] = {0};
     int nbEspeces = 0;
-
-    for (int i = 0; i < nbAnimaux; i++) {
+  
+    for (int i = 0; i < nbAnimaux; i++){
         if (zoo[i].estOccupe) {
             total++;
             sommeAges += zoo[i].age;
             
-            if (zoo[i].age < ageMin) {
+            if (zoo[i].age < ageMin){
                 ageMin = zoo[i].age;
                 plusJeune = zoo[i];
             }
-            if (zoo[i].age > ageMax) {
+            if (zoo[i].age > ageMax){
                 ageMax = zoo[i].age;
                 plusVieux = zoo[i];
             }
@@ -452,7 +551,6 @@ void afficherStatistiques() {
     int alertes = 0;
     for (int i = 0; i < nbAnimaux; i++) {
         if (zoo[i].estOccupe) {
-            // Maintenant on peut compter les alertes
             if (verifierAgeCritique(zoo[i])) {
                 alertes++;
             }
@@ -493,9 +591,11 @@ void menu() {
                 int sc;
                 printf("\n--- AFFICHAGE ---\n");
                 printf("1. Liste complete\n");
-                printf("2. Trier par nom\n");
-                printf("3. Trier par age\n");
-                printf("4. Afficher par habitat\n");
+                printf("2. Trier par nom (Tri a bulles)\n");
+                printf("3. Trier par age (Tri a bulles)\n");
+                printf("4. Trier par espece (Tri a bulles)\n");
+                printf("5. Trier par habitat (Tri a bulles)\n");
+                printf("6. Afficher par habitat\n");
                 printf("Choix : ");
                 scanf("%d", &sc);
                 viderBuffer();
@@ -503,7 +603,9 @@ void menu() {
                 if (sc == 1) afficherTousAnimaux();
                 else if (sc == 2) afficherTriesParNom();
                 else if (sc == 3) afficherTriesParAge();
-                else if (sc == 4) afficherParHabitat();
+                else if (sc == 4) afficherTriesParEspece();
+                else if (sc == 5) afficherTriesParHabitat();
+                else if (sc == 6) afficherParHabitat();
                 else printf("Choix invalide\n");
                 break;
             }
