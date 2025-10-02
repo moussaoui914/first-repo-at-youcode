@@ -226,7 +226,7 @@ void afficherTriesParNom() {
     
     trierParNomBulle(copie, count);
     
-    printf("\n=== ANIMAUX TRIES PAR NOM (TRI A BULLES) ===\n");
+    printf("\n=== ANIMAUX TRIES PAR NOM  ===\n");
     for (int i = 0; i < count; i++) {
         afficherAnimal(copie[i]);
     }
@@ -260,7 +260,7 @@ void afficherTriesParAge() {
     
     trierParAgeBulle(copie, count);
     
-    printf("\n=== ANIMAUX TRIES PAR AGE (TRI A BULLES) ===\n");
+    printf("\n=== ANIMAUX TRIES PAR AGE  ===\n");
     for (int i = 0; i < count; i++) {
         afficherAnimal(copie[i]);
     }
@@ -294,7 +294,7 @@ void afficherTriesParEspece() {
     
     trierParEspeceBulle(copie, count);
     
-    printf("\n=== ANIMAUX TRIES PAR ESPECE (TRI A BULLES) ===\n");
+    printf("\n=== ANIMAUX TRIES PAR ESPECE  ===\n");
     for (int i = 0; i < count; i++) {
         afficherAnimal(copie[i]);
     }
@@ -328,7 +328,7 @@ void afficherTriesParHabitat() {
     
     trierParHabitatBulle(copie, count);
     
-    printf("\n=== ANIMAUX TRIES PAR HABITAT (TRI A BULLES) ===\n");
+    printf("\n=== ANIMAUX TRIES PAR HABITAT ===\n");
     for (int i = 0; i < count; i++) {
         afficherAnimal(copie[i]);
     }
@@ -591,10 +591,10 @@ void menu() {
                 int sc;
                 printf("\n--- AFFICHAGE ---\n");
                 printf("1. Liste complete\n");
-                printf("2. Trier par nom (Tri a bulles)\n");
-                printf("3. Trier par age (Tri a bulles)\n");
-                printf("4. Trier par espece (Tri a bulles)\n");
-                printf("5. Trier par habitat (Tri a bulles)\n");
+                printf("2. Trier par nom \n");
+                printf("3. Trier par age \n");
+                printf("4. Trier par espece \n");
+                printf("5. Trier par habitat \n");
                 printf("6. Afficher par habitat\n");
                 printf("Choix : ");
                 scanf("%d", &sc);
